@@ -42,16 +42,25 @@ def train_lora(
     token=os.environ["HF_TOKEN"],
     )
 
-    model_modules = str(model.modules)
-    pattern = r'\((\w+)\): Linear'
-    linear_layer_names = re.findall(pattern, model_modules)
+    # model_modules = str(model.modules)
+    # pattern = r'\((\w+)\): Linear'
+    # linear_layer_names = re.findall(pattern, model_modules)
 
-    names = []
-    # Print the names of the Linear layers
-    for name in linear_layer_names:
-        names.append(name)
-    target_modules = list(set(names))
+    # names = []
+    # # Print the names of the Linear layers
+    # for name in linear_layer_names:
+    #     names.append(name)
+    target_modules = [
+        "q_proj",
+        "up_proj",
+        "o_proj",
+        "k_proj",
+        "down_proj",
+        "gate_proj",
+        "v_proj",    
+    ]
 
+    print(target_modules)
     lora_config = LoraConfig(
         r=training_args.lora_rank,
         target_modules=target_modules,
@@ -64,14 +73,17 @@ def train_lora(
         per_device_train_batch_size=training_args.per_device_train_batch_size,
         gradient_accumulation_steps=training_args.gradient_accumulation_steps,
         warmup_steps=100,
-        learning_rate=2e-4,
-        bf16=True,
+        learning_rate=1e-4,
+        fp16=True,
         logging_steps=20,
         output_dir="outputs",
-        optim="paged_adamw_8bit",
+        optim="paged_adamw_32bit",
         remove_unused_columns=False,
         num_train_epochs=training_args.num_train_epochs,
         max_seq_length=context_length,
+        max_grad_norm=0.3,
+        warmup_ratio=0.05,
+        lr_scheduler_type="cosine",
     )
     tokenizer = AutoTokenizer.from_pretrained(
         model_id,
