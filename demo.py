@@ -84,6 +84,7 @@ def train_lora(
         max_grad_norm=0.3,
         warmup_ratio=0.05,
         lr_scheduler_type="cosine",
+        weight_decay=0.01,
     )
     tokenizer = AutoTokenizer.from_pretrained(
         model_id,
