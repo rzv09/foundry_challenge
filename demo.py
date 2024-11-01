@@ -73,7 +73,7 @@ def train_lora(
         per_device_train_batch_size=training_args.per_device_train_batch_size,
         gradient_accumulation_steps=training_args.gradient_accumulation_steps,
         warmup_steps=100,
-        learning_rate=1e-4,
+        learning_rate=3e-4,
         fp16=True,
         logging_steps=20,
         output_dir="outputs",
@@ -84,7 +84,7 @@ def train_lora(
         max_grad_norm=0.3,
         warmup_ratio=0.05,
         lr_scheduler_type="cosine",
-        weight_decay=0.01, # L2 reg
+        # weight_decay=0.01, # L2 reg
     )
     tokenizer = AutoTokenizer.from_pretrained(
         model_id,
