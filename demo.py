@@ -93,7 +93,7 @@ def train_lora(
 
     # Load dataset
     dataset = SFTDataset(
-        file="shuffled.jsonl",
+        file="demo_data.jsonl",
         tokenizer=tokenizer,
         max_seq_length=context_length,
         template=model2template[model_id],
